@@ -17,11 +17,6 @@ CORS(app)
 @api.route('/recommand')  # 데코레이터 이용, '/hello' 경로에 클래스 등록
 class HelloWorld(Resource):
     def get(self):  # GET 요청시 리턴 값에 해당 하는 dict를 JSON 형태로 반환
-        
-        response = make_response()
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        response.headers.add('Access-Control-Allow-Headers', "*")
-        response.headers.add('Access-Control-Allow-Methods', "*")
         # 내장 데이터인 무비렌즈 데이터 로드하고 학습/테스트 데이터로 분리
         data = Dataset.load_builtin('ml-100k', prompt=False)
         train, test = train_test_split(data, test_size=0.25,
