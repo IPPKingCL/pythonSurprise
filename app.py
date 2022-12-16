@@ -74,7 +74,11 @@ def start_runner():
     res = requests.get(url) 
     res.raise_for_status() # 정상 200
     soup = BeautifulSoup(res.text, "lxml")
-    print(soup.body)
+    #print(soup.body)
+    tem = soup.find('ul',attrs={"class":"item vs-item  v-item-first"})
+    print(tem)
+    temlist = tem.find('span')
+    print(temlist)
     runner_job.resume()
 
 # stop job
@@ -86,8 +90,8 @@ def stop_runner():
 stop_runner()
 
 # schedules for main job
-sched.add_job(start_runner, 'cron', minute='1,6,21,31,41,51')
-sched.add_job(stop_runner, 'cron', minute='5,15,25,35,45,55')
+sched.add_job(start_runner, 'cron', minute='1,6,17,19,28,51')
+sched.add_job(stop_runner, 'cron', minute='5,18,25,35,45,55')
 
 sched.start()
 
