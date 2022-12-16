@@ -6,6 +6,8 @@ from surprise.model_selection import train_test_split
 from flask_cors import CORS
 from apscheduler.schedulers.background import BackgroundScheduler  
 from datetime import datetime
+import requests
+from bs4 import BeautifulSoup
 import os
 # from dotenv import load_dotenv
 # import pymysql
@@ -68,6 +70,11 @@ runner_job = sched.add_job(runner, 'interval', hours=1)#seconds=10)
 # start job
 def start_runner():
     print(f'{datetime.now()}:start_runner')
+    url = "https://www.weather.go.kr/w/weather/forecast/short-term.do?stnId=109" 
+    res = requests.get(url) 
+    res.raise_for_status() # 정상 200
+    soup = BeautifulSoup(res.text, "lxml")
+    print(soup.body)
     runner_job.resume()
 
 # stop job
@@ -79,7 +86,7 @@ def stop_runner():
 stop_runner()
 
 # schedules for main job
-sched.add_job(start_runner, 'cron', minute='1,11,21,31,41,51')
+sched.add_job(start_runner, 'cron', minute='1,6,21,31,41,51')
 sched.add_job(stop_runner, 'cron', minute='5,15,25,35,45,55')
 
 sched.start()
