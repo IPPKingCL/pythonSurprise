@@ -4,6 +4,8 @@ from surprise import SVD
 from surprise import Dataset
 from surprise.model_selection import train_test_split
 from flask_cors import CORS
+from apscheduler.schedulers.background import BackgroundScheduler  
+from datetime import datetime
 import os
 # from dotenv import load_dotenv
 # import pymysql
@@ -53,7 +55,34 @@ class HelloWorld(Resource):
 
         #db.commit()
         #db.close()
-       
+# main code
+def runner():
+    print(f'{datetime.now()}:runner')
+
+
+sched = BackgroundScheduler()
+
+# main job
+runner_job = sched.add_job(runner, 'interval', hours=1)#seconds=10)
+
+# start job
+def start_runner():
+    print(f'{datetime.now()}:start_runner')
+    runner_job.resume()
+
+# stop job
+def stop_runner():
+    print(f'{datetime.now()}:stop_runner')
+    runner_job.pause()
+
+# to delay main job
+stop_runner()
+
+# schedules for main job
+sched.add_job(start_runner, 'cron', minute='1,11,21,31,41,51')
+sched.add_job(stop_runner, 'cron', minute='5,15,25,35,45,55')
+
+sched.start()
 
 if __name__ == "__main__":
     app.run(debug=True, host='127.0.0.1', port=8080)
