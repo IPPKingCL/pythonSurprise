@@ -95,6 +95,24 @@ sched.add_job(stop_runner, 'cron', minute='5,18,25,35,45,55')
 
 sched.start()
 
+@api.route('/test', methods=['GET', 'POST'])
+class test(Resource):
+    
+    def get(self):
+        url = "https://www.weather.go.kr/w/weather/forecast/short-term.do?stnId=109" 
+        res = requests.get(url) 
+        res.raise_for_status() # 정상 200
+        soup = BeautifulSoup(res.text, "html.parser")
+        #print(soup)
+        tem = soup.find('div',attrs={"class":"lay"})
+        
+        print(tem)
+        tem1 = soup.find_all(class_='slide-wrap snow-exists rain-exists')
+
+        print(tem1)
+
+        
+
 if __name__ == "__main__":
     app.run(debug=True, host='127.0.0.1', port=8080)
 
